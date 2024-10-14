@@ -278,7 +278,7 @@ class Game {
         if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
             return this.endGame();
         }
-        this.scoreContainer.innerHTML = String(this.blocks.length - 2);
+        this.scoreContainer.innerHTML = String(this.blocks.length - 1);
         let newKidOnTheBlock = new Block(lastBlock);
         this.newBlocks.add(newKidOnTheBlock.mesh);
         this.blocks.push(newKidOnTheBlock);
