@@ -222,12 +222,12 @@ class Game {
         }
     }
     startGame() {
-    if (this.state != this.STATES.PLAYING) {
-        this.scoreContainer.innerHTML = '0'; // إعادة تعيين السكور
-        this.updateState(this.STATES.PLAYING);
-        this.addBlock();
+        if (this.state != this.STATES.PLAYING) {
+            this.scoreContainer.innerHTML = '0';
+            this.updateState(this.STATES.PLAYING);
+            this.addBlock();
+        }
     }
- }
     restartGame() {
         this.updateState(this.STATES.RESETTING);
         let oldBlocks = this.placedBlocks.children;
@@ -247,54 +247,48 @@ class Game {
         }, cameraMoveSpeed * 1000);
     }
     placeBlock() {
-    let currentBlock = this.blocks[this.blocks.length - 1];
-    let newBlocks = currentBlock.place();
-    this.newBlocks.remove(currentBlock.mesh);
-
-    // زيادة السكور بمقدار 10 عند إضافة بلوك جديد
-    this.scoreContainer.innerHTML = String(parseInt(this.scoreContainer.innerHTML) + 10);
-    
-    if (newBlocks.placed) {
-        this.placedBlocks.add(newBlocks.placed);
-    }
-    if (newBlocks.chopped) {
-        this.choppedBlocks.add(newBlocks.chopped);
-        let positionParams = { y: '-=30', ease: Power1.easeIn, onComplete: () => this.choppedBlocks.remove(newBlocks.chopped) };
-        let rotateRandomness = 10;
-        let rotationParams = {
-            delay: 0.05,
-            x: newBlocks.plane == 'z' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
-            z: newBlocks.plane == 'x' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
-            y: Math.random() * 0.1,
-        };
-        if (newBlocks.chopped.position[newBlocks.plane] > newBlocks.placed.position[newBlocks.plane]) {
-            positionParams[newBlocks.plane] = '+=' + (40 * Math.abs(newBlocks.direction));
-        } else {
-            positionParams[newBlocks.plane] = '-=' + (40 * Math.abs(newBlocks.direction));
+        let currentBlock = this.blocks[this.blocks.length - 1];
+        let newBlocks = currentBlock.place();
+        this.newBlocks.remove(currentBlock.mesh);
+        if (newBlocks.placed)
+            this.placedBlocks.add(newBlocks.placed);
+        if (newBlocks.chopped) {
+            this.choppedBlocks.add(newBlocks.chopped);
+            let positionParams = { y: '-=30', ease: Power1.easeIn, onComplete: () => this.choppedBlocks.remove(newBlocks.chopped) };
+            let rotateRandomness = 10;
+            let rotationParams = {
+                delay: 0.05,
+                x: newBlocks.plane == 'z' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
+                z: newBlocks.plane == 'x' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
+                y: Math.random() * 0.1,
+            };
+            if (newBlocks.chopped.position[newBlocks.plane] > newBlocks.placed.position[newBlocks.plane]) {
+                positionParams[newBlocks.plane] = '+=' + (40 * Math.abs(newBlocks.direction));
+            }
+            else {
+                positionParams[newBlocks.plane] = '-=' + (40 * Math.abs(newBlocks.direction));
+            }
+            TweenLite.to(newBlocks.chopped.position, 1, positionParams);
+            TweenLite.to(newBlocks.chopped.rotation, 1, rotationParams);
         }
-        TweenLite.to(newBlocks.chopped.position, 1, positionParams);
-        TweenLite.to(newBlocks.chopped.rotation, 1, rotationParams);
+        this.addBlock();
     }
-    this.addBlock();
-    }
-        
     addBlock() {
-    let lastBlock = this.blocks[this.blocks.length - 1];
-    if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
-        return this.endGame();
+        let lastBlock = this.blocks[this.blocks.length - 1];
+        if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
+            return this.endGame();
+        }
+        this.scoreContainer.innerHTML = String(this.blocks.length - 2);
+        let newKidOnTheBlock = new Block(lastBlock);
+        this.newBlocks.add(newKidOnTheBlock.mesh);
+        this.blocks.push(newKidOnTheBlock);
+        this.stage.setCamera(this.blocks.length * 2);
+        if (this.blocks.length >= 5)
+            this.instructions.classList.add('hide');
     }
-
-    // زيادة السكور بمقدار 10 عند إضافة بلوك جديد
-    this.scoreContainer.innerHTML = String((parseInt(this.scoreContainer.innerHTML) || 0) + 2); 
-
-    let newKidOnTheBlock = new Block(lastBlock);
-    this.newBlocks.add(newKidOnTheBlock.mesh);
-    this.blocks.push(newKidOnTheBlock);
-    this.stage.setCamera(this.blocks.length * 2);
-    
-    if (this.blocks.length >= 2)
-        this.instructions.classList.add('hide');
-}
+    endGame() {
+        this.updateState(this.STATES.ENDED);
+    }
     tick() {
         this.blocks[this.blocks.length - 1].tick();
         this.stage.render();
