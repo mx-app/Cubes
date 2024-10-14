@@ -18,8 +18,8 @@ class Stage {
             antialias: true,
             alpha: false
         });
+         // إزالة this.renderer.setClearColor('#000''#9f0000', 1);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setClearColor('#000''#9f0000', 1);
         this.container.appendChild(this.renderer.domElement);
         // scene
         this.scene = new THREE.Scene();
