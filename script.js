@@ -285,14 +285,14 @@ class Game {
     }
 
     // زيادة السكور بمقدار 10 عند إضافة بلوك جديد
-    this.scoreContainer.innerHTML = String((parseInt(this.scoreContainer.innerHTML) || 0) + 10); 
+    this.scoreContainer.innerHTML = String((parseInt(this.scoreContainer.innerHTML) || 0) + 2); 
 
     let newKidOnTheBlock = new Block(lastBlock);
     this.newBlocks.add(newKidOnTheBlock.mesh);
     this.blocks.push(newKidOnTheBlock);
     this.stage.setCamera(this.blocks.length * 2);
     
-    if (this.blocks.length >= 5)
+    if (this.blocks.length >= 2)
         this.instructions.classList.add('hide');
 }
     tick() {
