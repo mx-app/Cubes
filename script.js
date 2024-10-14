@@ -222,12 +222,12 @@ class Game {
         }
     }
     startGame() {
-        if (this.state != this.STATES.PLAYING) {
-            this.scoreContainer.innerHTML = '0';
-            this.updateState(this.STATES.PLAYING);
-            this.addBlock();
-        }
+    if (this.state != this.STATES.PLAYING) {
+        this.scoreContainer.innerHTML = '0'; // إعادة تعيين السكور
+        this.updateState(this.STATES.PLAYING);
+        this.addBlock();
     }
+ }
     restartGame() {
         this.updateState(this.STATES.RESETTING);
         let oldBlocks = this.placedBlocks.children;
