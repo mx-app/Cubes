@@ -247,32 +247,37 @@ class Game {
         }, cameraMoveSpeed * 1000);
     }
     placeBlock() {
-        let currentBlock = this.blocks[this.blocks.length - 1];
-        let newBlocks = currentBlock.place();
-        this.newBlocks.remove(currentBlock.mesh);
-        if (newBlocks.placed)
-            this.placedBlocks.add(newBlocks.placed);
-        if (newBlocks.chopped) {
-            this.choppedBlocks.add(newBlocks.chopped);
-            let positionParams = { y: '-=30', ease: Power1.easeIn, onComplete: () => this.choppedBlocks.remove(newBlocks.chopped) };
-            let rotateRandomness = 10;
-            let rotationParams = {
-                delay: 0.05,
-                x: newBlocks.plane == 'z' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
-                z: newBlocks.plane == 'x' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
-                y: Math.random() * 0.1,
-            };
-            if (newBlocks.chopped.position[newBlocks.plane] > newBlocks.placed.position[newBlocks.plane]) {
-                positionParams[newBlocks.plane] = '+=' + (40 * Math.abs(newBlocks.direction));
-            }
-            else {
-                positionParams[newBlocks.plane] = '-=' + (40 * Math.abs(newBlocks.direction));
-            }
-            TweenLite.to(newBlocks.chopped.position, 1, positionParams);
-            TweenLite.to(newBlocks.chopped.rotation, 1, rotationParams);
-        }
-        this.addBlock();
+    let currentBlock = this.blocks[this.blocks.length - 1];
+    let newBlocks = currentBlock.place();
+    this.newBlocks.remove(currentBlock.mesh);
+
+    // زيادة السكور بمقدار 10 عند إضافة بلوك جديد
+    this.scoreContainer.innerHTML = String(parseInt(this.scoreContainer.innerHTML) + 10);
+    
+    if (newBlocks.placed) {
+        this.placedBlocks.add(newBlocks.placed);
     }
+    if (newBlocks.chopped) {
+        this.choppedBlocks.add(newBlocks.chopped);
+        let positionParams = { y: '-=30', ease: Power1.easeIn, onComplete: () => this.choppedBlocks.remove(newBlocks.chopped) };
+        let rotateRandomness = 10;
+        let rotationParams = {
+            delay: 0.05,
+            x: newBlocks.plane == 'z' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
+            z: newBlocks.plane == 'x' ? ((Math.random() * rotateRandomness) - (rotateRandomness / 2)) : 0.1,
+            y: Math.random() * 0.1,
+        };
+        if (newBlocks.chopped.position[newBlocks.plane] > newBlocks.placed.position[newBlocks.plane]) {
+            positionParams[newBlocks.plane] = '+=' + (40 * Math.abs(newBlocks.direction));
+        } else {
+            positionParams[newBlocks.plane] = '-=' + (40 * Math.abs(newBlocks.direction));
+        }
+        TweenLite.to(newBlocks.chopped.position, 1, positionParams);
+        TweenLite.to(newBlocks.chopped.rotation, 1, rotationParams);
+    }
+    this.addBlock();
+    }
+        
     addBlock() {
         let lastBlock = this.blocks[this.blocks.length - 1];
         if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
