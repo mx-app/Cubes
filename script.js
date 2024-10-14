@@ -279,21 +279,22 @@ class Game {
     }
         
     addBlock() {
-        let lastBlock = this.blocks[this.blocks.length - 1];
-        if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
-            return this.endGame();
-        }
-        this.scoreContainer.innerHTML = String(this.blocks.length - 1);
-        let newKidOnTheBlock = new Block(lastBlock);
-        this.newBlocks.add(newKidOnTheBlock.mesh);
-        this.blocks.push(newKidOnTheBlock);
-        this.stage.setCamera(this.blocks.length * 2);
-        if (this.blocks.length >= 5)
-            this.instructions.classList.add('hide');
+    let lastBlock = this.blocks[this.blocks.length - 1];
+    if (lastBlock && lastBlock.state == lastBlock.STATES.MISSED) {
+        return this.endGame();
     }
-    endGame() {
-        this.updateState(this.STATES.ENDED);
-    }
+
+    // زيادة السكور بمقدار 10 عند إضافة بلوك جديد
+    this.scoreContainer.innerHTML = String((parseInt(this.scoreContainer.innerHTML) || 0) + 10); 
+
+    let newKidOnTheBlock = new Block(lastBlock);
+    this.newBlocks.add(newKidOnTheBlock.mesh);
+    this.blocks.push(newKidOnTheBlock);
+    this.stage.setCamera(this.blocks.length * 2);
+    
+    if (this.blocks.length >= 5)
+        this.instructions.classList.add('hide');
+}
     tick() {
         this.blocks[this.blocks.length - 1].tick();
         this.stage.render();
