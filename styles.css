@@ -88,6 +88,7 @@ html, body {
   opacity: 0;
   transform: translatey(-50px);
   border: 3px solid #fff;
+  border-radius: 10px;
   padding: 10px 20px;
   background-color: transparent;
   color: #fff;
@@ -132,31 +133,4 @@ html, body {
 
 #container.ended .game-over p {
   transition-delay: 0.3s;
-}
-
-/* تنسيق الرصيد */
-#balance-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 15px;
-  left: 20%;
-  transform: translateX(-50%);
-  color: #fff;
-  font-size: 20px;
-}
-
-#balanceTitle {
-  font-size: 15px;
-  font-weight: bold;
-  color: #fff;
-  margin: 0;
-}
-
-#balanceAmount {
-  font-size: 20px;
-  color: #fff;
-  margin-top: 5px;
 }
